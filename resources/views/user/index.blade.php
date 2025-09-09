@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Edukate - Online Education Website Template</title>
+    <title>EventSphere -College Management</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -19,7 +19,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="assets/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="assets/css/style.css" rel="stylesheet">
@@ -108,11 +109,12 @@
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-light bg-white text-body px-4 dropdown-toggle" type="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">Courses</button>
+                            aria-haspopup="true" aria-expanded="false">Events</button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Courses 1</a>
-                            <a class="dropdown-item" href="#">Courses 2</a>
-                            <a class="dropdown-item" href="#">Courses 3</a>
+                            <a class="dropdown-item" href="#">Technical</a>
+                            <a class="dropdown-item" href="#">Academic</a>
+                            <a class="dropdown-item" href="#">Sports Day</a>
+                             <a class="dropdown-item" href="#">Career Counselling</a>
                         </div>
                     </div>
                     <input type="text" class="form-control border-light" style="padding: 30px 25px;" placeholder="Keyword">
@@ -228,8 +230,8 @@
         <div class="row mx-0 justify-content-center pt-5">
             <div class="col-lg-6">
                 <div class="section-title text-center position-relative mb-4">
-                    <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Our Courses</h6>
-                    <h1 class="display-4">Checkout New Releases Of Our Courses</h1>
+                    <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Our Events</h6>
+                    <h1 class="display-4">Checkout New Releases Of Our Events</h1>
                 </div>
             </div>
         </div>
@@ -328,7 +330,7 @@
         <div class="row justify-content-center bg-image mx-0 mb-5">
             <div class="col-lg-6 py-5">
                 <div class="bg-white p-5 my-5">
-                    <h1 class="text-center mb-4">30% Off For New Students</h1>
+                    <h1 class="text-center mb-4">30% Off For Students</h1>
                     <form>
                         <div class="form-row">
                             <div class="col-sm-6">
@@ -346,10 +348,11 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <select class="custom-select bg-light border-0 px-3" style="height: 60px;">
-                                        <option selected>Select A courses</option>
-                                        <option value="1">courses 1</option>
-                                        <option value="2">courses 1</option>
-                                        <option value="3">courses 1</option>
+                                        <option selected>Select A Event:</option>
+                                        <option value="1">Technical</option>
+                                        <option value="2">Academic</option>
+                                        <option value="3">Sports Day</option>
+                                        <option value="4">Career Counselling</option>
                                     </select>
                                 </div>
                             </div>

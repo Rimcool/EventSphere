@@ -33,7 +33,7 @@
                 <div class="d-inline-flex align-items-center text-white">
                     <small><i class="fa fa-phone-alt mr-2"></i>+012 345 6789</small>
                     <small class="px-3">|</small>
-                    <small><i class="fa fa-envelope mr-2"></i>info@example.com</small>
+                    <small><i class="fa fa-envelope mr-2"></i>eventsphere@example.com</small>
                 </div>
             </div>
             <div class="col-lg-6 text-center text-lg-right">
@@ -110,12 +110,13 @@
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-light bg-white text-body px-4 dropdown-toggle" type="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">Courses</button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Courses 1</a>
-                            <a class="dropdown-item" href="#">Courses 2</a>
-                            <a class="dropdown-item" href="#">Courses 3</a>
-                        </div>
+                            aria-haspopup="true" aria-expanded="false">Events</button>
+                       <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Technical</a>
+                            <a class="dropdown-item" href="#">Academic</a>
+                            <a class="dropdown-item" href="#">Sports Day</a>
+                             <a class="dropdown-item" href="#">Career Counselling</a>
+                        </div> 
                     </div>
                     <input type="text" class="form-control border-light" style="padding: 30px 25px;" placeholder="Keyword">
                     <div class="input-group-append">
@@ -134,8 +135,8 @@
             <div class="row mx-0 justify-content-center">
                 <div class="col-lg-8">
                     <div class="section-title text-center position-relative mb-5">
-                        <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Our Courses</h6>
-                        <h1 class="display-4">Checkout New Releases Of Our Courses</h1>
+                        <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Our Events</h6>
+                        <h1 class="display-4">Checkout New Releases Of Our Events</h1>
                     </div>
                 </div>
             </div>
@@ -290,7 +291,7 @@
                     <h3 class="text-white mb-4">Get In Touch</h3>
                     <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, New York, USA</p>
                     <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
-                    <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+                    <p><i class="fa fa-envelope mr-2"></i>eventsphere@example.com</p>
                     <div class="d-flex justify-content-start mt-4">
                         <a class="text-white mr-4" href="#"><i class="fab fa-2x fa-twitter"></i></a>
                         <a class="text-white mr-4" href="#"><i class="fab fa-2x fa-facebook-f"></i></a>
@@ -299,7 +300,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 mb-5">
-                    <h3 class="text-white mb-4">Our Courses</h3>
+                    <h3 class="text-white mb-4">Our Technical Events</h3>
                     <div class="d-flex flex-column justify-content-start">
                         <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Web Design</a>
                         <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Apps Design</a>
@@ -307,6 +308,7 @@
                         <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Research</a>
                         <a class="text-white-50" href="#"><i class="fa fa-angle-right mr-2"></i>SEO</a>
                     </div>
+                    
                 </div>
                 <div class="col-md-4 mb-5">
                     <h3 class="text-white mb-4">Quick Links</h3>
