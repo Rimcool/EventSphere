@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // User routes
 Route::get('/', function () {
-    return view('user/index');
+    return view('user/index');  
 });
 
 Route::get('/about', function () {
@@ -35,7 +35,18 @@ Route::get('/testimonial', function () {
     return view('user/testimonial');
 })->name('testimonial');
 
-// Dashboard routes (protected)
+Route::prefix('admin')->group(function () {
+    Route::get('/', function () {
+        return view('admin.index');
+    })->name('admin.index');
+    
+    Route::get('/form', function () {
+        return view('admin.forms');
+    })->name('admin.form');
+});
+
+
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
