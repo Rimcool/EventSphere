@@ -60,41 +60,48 @@
     </div>
     <!-- Topbar End -->
 
+    <!-- Add this block right after Topbar or before Contact Start -->
+    @if(session('success'))
+        <div class="container mt-3">
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        </div>
+    @endif
 
     <!-- Navbar Start -->
-     <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
-        <a href="{{ url('/') }}" class="navbar-brand ml-lg-3 d-flex align-items-center">
-            <!-- Add your logo -->
-            <img src="images/logo.png" alt="EventSphere Logo" height="50" class="mr-2">
-            <h1 class="m-0 text-uppercase text-primary">
-               EventSphere
-            </h1>
-        </a>
+       <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
+            <a href="{{ url('/') }}" class="navbar-brand ml-lg-3 d-flex align-items-center">
+                <img src="images/logo.png" alt="EventSphere Logo" height="50" class="mr-2">
+                <h1 class="m-0 text-uppercase text-primary">
+                    EventSphere
+                </h1>
+            </a>
 
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
-            <div class="navbar-nav mx-auto py-0">
-                <a href="{{ url('/') }}" class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
-                <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->is('about') ? 'active' : '' }}">About</a>
-                <a href="{{ route('event') }}" class="nav-item nav-link {{ request()->is('event') ? 'active' : '' }}">Events</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                    <div class="dropdown-menu m-0">
-                        <a href="{{ route('features') }}" class="dropdown-item">Our Features</a>
-                        <a href="{{ route('team') }}" class="dropdown-item">Instructors</a>
-                        <a href="{{ route('testimonial') }}" class="dropdown-item">Testimonial</a>
+            <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
+                <div class="navbar-nav mx-auto py-0">
+                    <a href="{{ url('/') }}" class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
+                    <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->is('about') ? 'active' : '' }}">About</a>
+<a href="{{ route('events') }}" class="nav-item nav-link {{ request()->is('events') ? 'active' : '' }}">Events</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="{{ route('features') }}" class="dropdown-item">Our Features</a>
+                            <a href="{{ route('team') }}" class="dropdown-item">Instructors</a>
+                            <a href="{{ route('testimonial') }}" class="dropdown-item">Testimonial</a>
+                        </div>
                     </div>
+                    <a href="{{ route('contact.create') }}" class="nav-item nav-link {{ request()->is('contact') ? 'active' : '' }}">Contact</a>
                 </div>
-                <a href="{{ route('contact') }}" class="nav-item nav-link {{ request()->is('contact') ? 'active' : '' }}">Contact</a>
+               <a href="{{ route('events') }}" class="btn btn-primary py-2 px-4 d-none d-lg-block">Join Us</a>
             </div>
-            <a href="{{ route('event') }}" class="btn btn-primary py-2 px-4 d-none d-lg-block">Join Us</a>
-        </div>
-    </nav>
-</div>
+        </nav>
+    </div>
     <!-- Navbar End -->
 
 
@@ -170,25 +177,30 @@
                         <h1 class="display-4">Send Us A Message</h1>
                     </div>
                     <div class="contact-form">
-                        <form>
-                            <div class="row">
-                                <div class="col-6 form-group">
-                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 p-0" placeholder="Your Name" required="required">
-                                </div>
-                                <div class="col-6 form-group">
-                                    <input type="email" class="form-control border-top-0 border-right-0 border-left-0 p-0" placeholder="Your Email" required="required">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control border-top-0 border-right-0 border-left-0 p-0" placeholder="Subject" required="required">
-                            </div>
-                            <div class="form-group">
-                                <textarea class="form-control border-top-0 border-right-0 border-left-0 p-0" rows="5" placeholder="Message" required="required"></textarea>
-                            </div>
-                            <div>
-                                <button class="btn btn-primary py-3 px-5" type="submit">Send Message</button>
-                            </div>
-                        </form>
+                     <form method="POST" action="{{ route('contact.store') }}">
+    @csrf
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" name="phone" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="subject">Subject</label>
+        <input type="text" name="subject" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="message">Message</label>
+        <textarea name="message" class="form-control" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
                     </div>
                 </div>
             </div>
@@ -287,5 +299,4 @@
     <!-- Template Javascript -->
     <script src="assets/js/main.js"></script>
 </body>
-
 </html>

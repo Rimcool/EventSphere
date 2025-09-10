@@ -3,30 +3,24 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Edukate - Online Education Website Template</title>
+    <title>EventSphere - Upcoming Events</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
-    <!-- Google Web Fonts -->
+    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"> 
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
-    <link href="assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Corrected asset paths for all CSS -->
+    <link href="{{ asset('assets/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Topbar Start -->
     <div class="container-fluid bg-dark">
         <div class="row py-2 px-lg-5">
             <div class="col-lg-6 text-center text-lg-left mb-2 mb-lg-0">
@@ -57,54 +51,47 @@
             </div>
         </div>
     </div>
-    <!-- Topbar End -->
+    
+    <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
+            <a href="{{ url('/') }}" class="navbar-brand ml-lg-3 d-flex align-items-center">
+                <img src="images/logo.png" alt="EventSphere Logo" height="50" class="mr-2">
+                <h1 class="m-0 text-uppercase text-primary">
+                    EventSphere
+                </h1>
+            </a>
 
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <!-- Navbar Start -->
-      <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
-        <a href="{{ url('/') }}" class="navbar-brand ml-lg-3 d-flex align-items-center">
-            <!-- Add your logo -->
-            <img src="images/logo.png" alt="EventSphere Logo" height="50" class="mr-2">
-            <h1 class="m-0 text-uppercase text-primary">
-               EventSphere
-            </h1>
-        </a>
-
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
-            <div class="navbar-nav mx-auto py-0">
-                <a href="{{ url('/') }}" class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
-                <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->is('about') ? 'active' : '' }}">About</a>
-                <a href="{{ route('event') }}" class="nav-item nav-link {{ request()->is('event') ? 'active' : '' }}">Events</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                    <div class="dropdown-menu m-0">
-                        <a href="{{ route('features') }}" class="dropdown-item">Our Features</a>
-                        <a href="{{ route('team') }}" class="dropdown-item">Instructors</a>
-                        <a href="{{ route('testimonial') }}" class="dropdown-item">Testimonial</a>
+            <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
+                <div class="navbar-nav mx-auto py-0">
+                    <a href="{{ url('/') }}" class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
+                    <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->is('about') ? 'active' : '' }}">About</a>
+<a href="{{ route('events') }}" class="nav-item nav-link {{ request()->is('events') ? 'active' : '' }}">Events</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="{{ route('features') }}" class="dropdown-item">Our Features</a>
+                            <a href="{{ route('team') }}" class="dropdown-item">Instructors</a>
+                            <a href="{{ route('testimonial') }}" class="dropdown-item">Testimonial</a>
+                        </div>
                     </div>
+                    <a href="{{ route('contact.create') }}" class="nav-item nav-link {{ request()->is('contact') ? 'active' : '' }}">Contact</a>
                 </div>
-                <a href="{{ route('contact') }}" class="nav-item nav-link {{ request()->is('contact') ? 'active' : '' }}">Contact</a>
+               <a href="{{ route('events') }}" class="btn btn-primary py-2 px-4 d-none d-lg-block">Join Us</a>
             </div>
-            <a href="{{ route('event') }}" class="btn btn-primary py-2 px-4 d-none d-lg-block">Join Us</a>
-        </div>
-    </nav>
-</div>
-    <!-- Navbar End -->
-
-
-    <!-- Header Start -->
+        </nav>
+    </div>
+    
     <div class="jumbotron jumbotron-fluid page-header position-relative overlay-bottom" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
-            <h1 class="text-white display-1">Courses</h1>
+            <h1 class="text-white display-1">Events</h1>
             <div class="d-inline-flex text-white mb-5">
                 <p class="m-0 text-uppercase"><a class="text-white" href="">Home</a></p>
                 <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                <p class="m-0 text-uppercase">Courses</p>
+                <p class="m-0 text-uppercase">Events</p>
             </div>
             <div class="mx-auto mb-5" style="width: 100%; max-width: 600px;">
                 <div class="input-group">
@@ -115,7 +102,7 @@
                             <a class="dropdown-item" href="#">Technical</a>
                             <a class="dropdown-item" href="#">Academic</a>
                             <a class="dropdown-item" href="#">Sports Day</a>
-                             <a class="dropdown-item" href="#">Career Counselling</a>
+                            <a class="dropdown-item" href="#">Career Counselling</a>
                         </div> 
                     </div>
                     <input type="text" class="form-control border-light" style="padding: 30px 25px;" placeholder="Keyword">
@@ -126,10 +113,6 @@
             </div>
         </div>
     </div>
-    <!-- Header End -->
-
-
-    <!-- Courses Start -->
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="row mx-0 justify-content-center">
@@ -140,131 +123,56 @@
                     </div>
                 </div>
             </div>
+            
             <div class="row">
+                @forelse($events as $event)
                 <div class="col-lg-4 col-md-6 pb-4">
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                        <img class="img-fluid" src="assets/img/courses-1.jpg" alt="">
+                    <!-- Corrected card HTML to match theme styling -->
+                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="{{ route('events.detail', $event->id) }}">
+                        <!-- The image must be wrapped in this specific div for proper alignment and sizing -->
+                        <img class="img-fluid" src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->title }}">
                         <div class="courses-text">
-                            <h4 class="text-center text-white px-3">Web design & development courses for
-                                beginners</h4>
+                            <h4 class="text-center text-white px-3">{{ $event->title }}</h4>
                             <div class="border-top w-100 mt-3">
                                 <div class="d-flex justify-content-between p-4">
-                                    <span class="text-white"><i class="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span class="text-white"><i class="fa fa-star mr-2"></i>4.5
-                                        <small>(250)</small></span>
+                                    <span class="text-white"><i class="fa fa-user mr-2"></i>{{ $event->host ?? 'N/A' }}</span>
+                                    <span class="text-white"><i class="fa fa-star mr-2"></i>{{ $event->rating ?? 'N/A' }}
+                                        <small>({{ $event->reviews ?? '0' }})</small></span>
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-4 col-md-6 pb-4">
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                        <img class="img-fluid" src="assets/img/courses-2.jpg" alt="">
-                        <div class="courses-text">
-                            <h4 class="text-center text-white px-3">Web design & development courses for
-                                beginners</h4>
-                            <div class="border-top w-100 mt-3">
-                                <div class="d-flex justify-content-between p-4">
-                                    <span class="text-white"><i class="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span class="text-white"><i class="fa fa-star mr-2"></i>4.5
-                                        <small>(250)</small></span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+                @empty
+                <div class="col-12 text-center">
+                    <p class="text-muted">No events available at the moment. Please check back later!</p>
                 </div>
-                <div class="col-lg-4 col-md-6 pb-4">
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                        <img class="img-fluid" src="assets/img/courses-3.jpg" alt="">
-                        <div class="courses-text">
-                            <h4 class="text-center text-white px-3">Web design & development courses for
-                                beginners</h4>
-                            <div class="border-top w-100 mt-3">
-                                <div class="d-flex justify-content-between p-4">
-                                    <span class="text-white"><i class="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span class="text-white"><i class="fa fa-star mr-2"></i>4.5
-                                        <small>(250)</small></span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 pb-4">
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                        <img class="img-fluid" src="assets/img/courses-4.jpg" alt="">
-                        <div class="courses-text">
-                            <h4 class="text-center text-white px-3">Web design & development courses for
-                                beginners</h4>
-                            <div class="border-top w-100 mt-3">
-                                <div class="d-flex justify-content-between p-4">
-                                    <span class="text-white"><i class="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span class="text-white"><i class="fa fa-star mr-2"></i>4.5
-                                        <small>(250)</small></span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 pb-4">
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                        <img class="img-fluid" src="assets/img/courses-5.jpg" alt="">
-                        <div class="courses-text">
-                            <h4 class="text-center text-white px-3">Web design & development courses for
-                                beginners</h4>
-                            <div class="border-top w-100 mt-3">
-                                <div class="d-flex justify-content-between p-4">
-                                    <span class="text-white"><i class="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span class="text-white"><i class="fa fa-star mr-2"></i>4.5
-                                        <small>(250)</small></span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-6 pb-4">
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                        <img class="img-fluid" src="assets/img/courses-6.jpg" alt="">
-                        <div class="courses-text">
-                            <h4 class="text-center text-white px-3">Web design & development courses for
-                                beginners</h4>
-                            <div class="border-top w-100 mt-3">
-                                <div class="d-flex justify-content-between p-4">
-                                    <span class="text-white"><i class="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span class="text-white"><i class="fa fa-star mr-2"></i>4.5
-                                        <small>(250)</small></span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-12">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-lg justify-content-center mb-0">
-                          <li class="page-item disabled">
-                            <a class="page-link rounded-0" href="#" aria-label="Previous">
-                              <span aria-hidden="true">&laquo;</span>
-                              <span class="sr-only">Previous</span>
-                            </a>
-                          </li>
-                          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
-                            <a class="page-link rounded-0" href="#" aria-label="Next">
-                              <span aria-hidden="true">&raquo;</span>
-                              <span class="sr-only">Next</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </nav>
-                </div>
+                @endforelse
+            </div>
+            
+            <div class="col-12">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-lg justify-content-center mb-0">
+                      <li class="page-item disabled">
+                        <a class="page-link rounded-0" href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link rounded-0" href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
             </div>
         </div>
     </div>
-    <!-- Courses End -->
-
-
-    <!-- Footer Start -->
     <div class="container-fluid position-relative overlay-top bg-dark text-white-50 py-5" style="margin-top: 90px;">
         <div class="container mt-5 pt-5">
             <div class="row">
@@ -308,7 +216,6 @@
                         <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Research</a>
                         <a class="text-white-50" href="#"><i class="fa fa-angle-right mr-2"></i>SEO</a>
                     </div>
-                    
                 </div>
                 <div class="col-md-4 mb-5">
                     <h3 class="text-white mb-4">Quick Links</h3>
@@ -337,23 +244,18 @@
             </div>
         </div>
     </div>
-    <!-- Footer End -->
-
-
-    <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary rounded-0 btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/lib/easing/easing.min.js"></script>
-    <script src="assets/lib/waypoints/waypoints.min.js"></script>
-    <script src="assets/lib/counterup/counterup.min.js"></script>
-    <script src="assets/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="{{ asset('assets/lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('assets/lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('assets/lib/counterup/counterup.min.js') }}"></script>
+    <script src="{{ asset('assets/lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-    <!-- Template Javascript -->
-    <script src="assets/js/main.js"></script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
