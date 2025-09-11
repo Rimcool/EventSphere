@@ -75,3 +75,18 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+// Profile routes 
+// -------------------------------
+
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/dashboard', [UserProfileController::class, 'dashboard'])->name('user.dashboard');
+
+//     Route::get('/profile/edit', [UserProfileController::class, 'editProfile'])->name('user.editProfile');
+//     Route::put('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.updateProfile');
+
+//     Route::get('/profile/change-password', [UserProfileController::class, 'changePasswordForm'])->name('user.changePassword');
+//     Route::post('/profile/change-password', [UserProfileController::class, 'changePassword'])->name('user.updatePassword');
+
+//     Route::post('/logout', [UserProfileController::class, 'logout'])->name('user.logout');
+// });

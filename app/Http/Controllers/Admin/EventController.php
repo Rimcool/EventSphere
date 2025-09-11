@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\BookingConfirmationMail;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Booking; 
 
 class EventController extends Controller
 {
@@ -157,6 +160,9 @@ class EventController extends Controller
     /**
      * Handle event booking.
      */
+        /**
+     * Handle event booking with email confirmation.
+     */
     public function bookEvent($id)
     {
         $event = Event::findOrFail($id);
@@ -165,12 +171,22 @@ class EventController extends Controller
             $event->booked_seats += 1;
             $event->save();
 
-            // You can add logic to save user info and send ticket here
-            return redirect()->back()->with('success', 'Seat booked! You will receive your ticket.');
+            // Optional: create a Booking record linked to user & event
+            $booking = Booking::create([
+                'user_id' => auth()->id(),
+                'event_id' => $event->id,
+                'seat_number' => $event->booked_seats,
+            ]);
+
+            // Send confirmation email to user
+            Mail::to(auth()->user()->email)->send(new BookingConfirmationMail($booking));
+
+            return redirect()->back()->with('success', 'Seat booked! A confirmation email with your ticket has been sent.');
         } else {
             return redirect()->back()->with('error', 'No seats available.');
         }
     }
+
 
     /**
      * Display a single event's details.

@@ -85,6 +85,7 @@
             </div>
         </nav>
     </div>
+    
     <div class="jumbotron jumbotron-fluid position-relative overlay-bottom" style="margin-bottom: 90px;">
         <div class="container text-center my-5 py-5">
            <h1 class="text-white mt-4 mb-4">Discover. Connect. Engage.</h1>
