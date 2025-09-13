@@ -48,6 +48,56 @@
             width: 25px;
             text-align: center;
         }
+        .seat-counter {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .seat-counter button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .seat-counter input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            margin: 0 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .ticket {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #f8f9fa;
+        }
+        .ticket-header {
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .ticket-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .ticket-info div {
+            margin-bottom: 8px;
+        }
+        #ticketQrCode {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
     </style>
 </head>
 
@@ -89,7 +139,7 @@
                 <div class="navbar-nav mx-auto py-0">
                     <a href="{{ url('/') }}" class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
                     <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->is('about') ? 'active' : '' }}">About</a>
-<a href="{{ route('events') }}" class="nav-item nav-link {{ request()->is('events') ? 'active' : '' }}">Events</a>
+                    <a href="{{ route('events') }}" class="nav-item nav-link {{ request()->is('events') ? 'active' : '' }}">Events</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu m-0">
@@ -166,11 +216,9 @@
                             @php
                                 $seatsLeft = $event->total_seats - ($event->booked_seats ?? 0);
                             @endphp
-                            @if($seatsLeft > 0)
-                                <span class="badge badge-success ml-2">{{ $seatsLeft }}</span>
-                            @else
-                                <span class="badge badge-danger ml-2">No seats</span>
-                            @endif
+                            <span id="seatsLeftCount" class="badge {{ $seatsLeft > 0 ? 'badge-success' : 'badge-danger' }} ml-2">
+                                {{ $seatsLeft > 0 ? $seatsLeft : 'No seats' }}
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -184,8 +232,8 @@
 
                 @if($seatsLeft > 0)
                     <!-- Book Seat Button triggers modal -->
-                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#bookingModal">
-                        Book Seat
+                    <button type="button" class="btn btn-primary btn-block mt-4" data-toggle="modal" data-target="#bookingModal">
+                        Book Your Seats
                     </button>
                 @else
                     <button class="btn btn-secondary btn-block mt-4" disabled>No Seats Available</button>
@@ -194,59 +242,77 @@
                 <!-- Booking Modal -->
                 <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
-                    <form id="bookingForm">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="bookingModalLabel">Book Your Seat</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="form-group">
-                            <label for="userName">Your Name</label>
-                            <input type="text" class="form-control" id="userName" required>
-                          </div>
-                          <div class="form-group">
-                            <label for="userEmail">Your Email</label>
-                            <input type="email" class="form-control" id="userEmail" required>
-                          </div>
-                          <!-- Add more booking questions here if needed -->
-                        </div>
-                        <div class="modal-footer">
-                          <button type="submit" class="btn btn-primary">Submit Booking</button>
-                        </div>
-                      </div>
-                    </form>
+                    <div class="modal-content">
+                        <form id="bookingForm" action="{{ route('event.book', $event->id) }}" method="POST">
+                            @csrf
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="bookingModalLabel">Book Your Seats</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="form-group">
+                                <label for="userName">Your Name</label>
+                                <input type="text" class="form-control" id="userName" name="name" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="userEmail">Your Email</label>
+                                <input type="email" class="form-control" id="userEmail" name="email" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="seatCount">Number of Seats</label>
+                                <div class="seat-counter">
+                                    <button type="button" id="decreaseSeats" class="btn btn-outline-secondary">-</button>
+                                    <input type="number" class="form-control text-center" id="seatCount" name="seat_count" min="1" max="{{ $seatsLeft }}" value="1" required>
+                                    <button type="button" id="increaseSeats" class="btn btn-outline-secondary">+</button>
+                                </div>
+                                <small class="form-text text-muted">Maximum {{ $seatsLeft }} seats available</small>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                              <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                            </div>
+                        </form>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Ticket Modal -->
                 <div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="ticketModalLabel" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content" id="ticketContent">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="ticketModalLabel">Your Event Ticket</h5>
+                        <h5 class="modal-title" id="ticketModalLabel">Your Event Tickets</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body text-center">
-                        <h4 class="text-success">Booking Confirmed!</h4>
-                        <p><strong>Ticket Number:</strong> <span id="ticketNumber"></span></p>
-                        <p><strong>Name:</strong> <span id="ticketName"></span></p>
-                        <p><strong>Email:</strong> <span id="ticketEmail"></span></p>
-                        <hr>
-                        <p><strong>Event:</strong> {{ $event->title }}</p>
-                        <p><strong>Date:</strong> {{ $event->date }} {{ $event->time }}</p>
-                        <p><strong>Location:</strong> {{ $event->location }}</p>
-                        <div class="alert alert-info mt-3">
-                          Welcome to <strong>{{ $event->title }}</strong>! We're excited to have you. Get ready to enjoy and make great memories!
+                      <div class="modal-body">
+                        <div class="ticket">
+                            <div class="ticket-header">
+                                <h4 class="text-success"><i class="fas fa-check-circle"></i> Booking Confirmed!</h4>
+                                <h5 class="text-primary">{{ $event->title }}</h5>
+                            </div>
+                            <div class="ticket-info">
+                                <div><strong>Ticket Number:</strong> <span id="ticketNumber"></span></div>
+                                <div><strong>Booking Date:</strong> <span id="bookingDate"></span></div>
+                                <div><strong>Name:</strong> <span id="ticketName"></span></div>
+                                <div><strong>Email:</strong> <span id="ticketEmail"></span></div>
+                                <div><strong>Seats Booked:</strong> <span id="ticketSeats"></span></div>
+                                <div><strong>Event Date:</strong> {{ $event->date }}</div>
+                                <div><strong>Time:</strong> {{ $event->time }}</div>
+                                <div><strong>Location:</strong> {{ $event->location }}</div>
+                            </div>
+                            <div id="ticketQrCode" class="my-3"></div>
+                            <div class="alert alert-info mt-3">
+                              <i class="fas fa-info-circle"></i> Welcome to <strong>{{ $event->title }}</strong>! We're excited to have you. Please present this ticket at the entrance.
+                            </div>
                         </div>
-                        <p class="text-info">Show this ticket at the event entrance.</p>
-                        <button id="downloadTicketBtn" class="btn btn-outline-primary mt-3">Download Ticket</button>
                       </div>
                       <div class="modal-footer">
+                        <button id="downloadTicketBtn" class="btn btn-outline-primary"><i class="fas fa-download"></i> Download Ticket</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                       </div>
                     </div>
@@ -256,7 +322,8 @@
             </div>
         </div>
         <div class="text-center mt-3 mb-5">
-            <a href="{{ url('/') }}" class="btn btn-outline-dark">Back to Home</a>
+            <a href="{{ route('events') }}" class="btn btn-outline-secondary mr-2"><i class="fas fa-arrow-left"></i> Back to Events</a>
+            <a href="{{ url('/') }}" class="btn btn-outline-primary">Back to Home</a>
         </div>
     </div>
     <div class="container-fluid position-relative overlay-top bg-dark text-white-50 py-5" style="margin-top: 90px;">
@@ -320,10 +387,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-md-left mb-3 mb-md-0">
-                    <p class="m-0">Copyright &copy; <a class="text-white" href="#">Your Site Name</a>. All Rights Reserved.</p>
+                    <p class="m-0">Copyright &copy; <a class="text-white" href="#">EventSphere</a>. All Rights Reserved.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-right">
-                    <p class="m-0">Designed by <a class="text-white" href="https://htmlcodex.com">HTML Codex</a> Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a></p>
+                    <p class="m-0">Designed by <a class="text-white" href="https://htmlcodex.com">HTML Codex</a></p>
                 </div>
             </div>
         </div>
@@ -338,48 +405,121 @@
     <script src="{{ asset('assets/lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <script>
-                $(document).ready(function() {
-                    $('#bookingForm').on('submit', function(e) {
-                        e.preventDefault();
-                        var name = $('#userName').val();
-                        var email = $('#userEmail').val();
-                        // Generate a random ticket number
-                        var ticketNumber = 'EVT-' + Math.floor(100000 + Math.random() * 900000);
-                        $('#bookingModal').modal('hide');
-                        $('#ticketName').text(name);
-                        $('#ticketEmail').text(email);
-                        $('#ticketNumber').text(ticketNumber);
+    $(document).ready(function() {
+        // Initialize seats from server or localStorage
+        let availableSeats = {{ $seatsLeft }};
+        const eventId = {{ $event->id }};
+        const storageKey = `event_${eventId}_seats`;
+        
+        // Check if we have a stored value for this event
+        const storedSeats = localStorage.getItem(storageKey);
+        if (storedSeats !== null) {
+            availableSeats = parseInt(storedSeats);
+            updateSeatsDisplay(availableSeats);
+        }
+        
+        // Seat counter functionality
+        $('#increaseSeats').click(function() {
+            const seatInput = $('#seatCount');
+            let currentValue = parseInt(seatInput.val());
+            if (currentValue < availableSeats) {
+                seatInput.val(currentValue + 1);
+            }
+        });
+        
+        $('#decreaseSeats').click(function() {
+            const seatInput = $('#seatCount');
+            let currentValue = parseInt(seatInput.val());
+            if (currentValue > 1) {
+                seatInput.val(currentValue - 1);
+            }
+        });
+        
+        $('#seatCount').on('change', function() {
+            let value = parseInt($(this).val());
+            if (isNaN(value) || value < 1) {
+                $(this).val(1);
+            } else if (value > availableSeats) {
+                $(this).val(availableSeats);
+            }
+        });
+        
+    // ... (your existing code) ...
 
-                        // Decrease seats left badge
-                        var $badge = $('.info-item strong:contains("Seats Left:")').next('.badge');
-                        var seatsLeft = parseInt($badge.text());
-                        if (seatsLeft > 0) {
-                            seatsLeft -= 1;
-                            $badge.text(seatsLeft);
-                            if (seatsLeft === 0) {
-                                $badge.removeClass('badge-success').addClass('badge-danger').text('No seats');
-                                $('.btn.btn-primary.btn-block[data-target="#bookingModal"]').prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary').text('No Seats Available');
-                            }
-                        }
+// Handle form submission with AJAX
+$('#bookingForm').on('submit', function(e) {
+    e.preventDefault(); // Prevent the default form submission
 
-                        setTimeout(function() {
-                            $('#ticketModal').modal('show');
-                        }, 500);
-                    });
+    const form = $(this);
+    const url = form.attr('action');
+    const formData = form.serialize(); // This serializes all form inputs
 
-                    // Download ticket as image
-                    $('#downloadTicketBtn').on('click', function() {
-                        html2canvas(document.querySelector("#ticketContent")).then(function(canvas) {
-                            var link = document.createElement('a');
-                            link.download = 'event_ticket.png';
-                            link.href = canvas.toDataURL();
-                            link.click();
-                        });
-                    });
-                });
-                </script>
+    // Disable the button to prevent multiple submissions
+    const submitBtn = form.find('button[type="submit"]');
+    submitBtn.prop('disabled', true).text('Booking...');
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        success: function(response) {
+            // This code runs if the server returns a successful response (200 OK)
+            console.log(response);
+
+            // Update available seats and display
+            let availableSeats = response.seatsLeft;
+            localStorage.setItem(storageKey, availableSeats);
+            updateSeatsDisplay(availableSeats);
+
+            // Populate ticket modal with data from the server's response
+            $('#ticketNumber').text(response.ticketNumber);
+            $('#bookingDate').text(response.bookingDate);
+            $('#ticketName').text(response.name);
+            $('#ticketEmail').text(response.email);
+            $('#ticketSeats').text(response.seatCount);
+
+            // Generate QR code based on the response
+            $('#ticketQrCode').empty();
+            const qrText = `Event: {{ $event->title }}\nTicket: ${response.ticketNumber}\nName: ${response.name}\nSeats: ${response.seatCount}\nDate: {{ $event->date }}`;
+            new QRCode(document.getElementById("ticketQrCode"), {
+                text: qrText,
+                width: 150,
+                height: 150
+            });
+
+            // Hide booking modal and show ticket modal
+            $('#bookingModal').modal('hide');
+            setTimeout(function() {
+                $('#ticketModal').modal('show');
+            }, 500);
+
+            // Re-enable the submit button
+            submitBtn.prop('disabled', false).text('Confirm Booking');
+        },
+        error: function(xhr) {
+            // This code runs if the server returns an error
+            console.log(xhr.responseText);
+            let errorMessage = 'An error occurred during booking. Please try again.';
+            try {
+                const errorResponse = JSON.parse(xhr.responseText);
+                if (errorResponse.message) {
+                    errorMessage = errorResponse.message;
+                }
+            } catch (e) {
+                // Do nothing
+            }
+            alert(errorMessage);
+            
+            // Re-enable the submit button
+            submitBtn.prop('disabled', false).text('Confirm Booking');
+        }
+    });
+}); 
+    </script>
 </body>
 
 </html>

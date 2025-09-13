@@ -8,11 +8,14 @@
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin/css/bootstrap.css">
-    <link rel="stylesheet" href="admin/vendors/perfect-scrollbar/perfect-scrollbar.css">
-    <link rel="stylesheet" href="admin/vendors/bootstrap-icons/bootstrap-icons.css">
-    <link rel="stylesheet" href="admin/css/app.css">
-    <link rel="shortcut icon" href="admin/images/favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="{{ asset('admin/css/bootstrap.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('admin/vendors/simple-datatables/style.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('admin/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/vendors/bootstrap-icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/app.css') }}">
+    <link rel="shortcut icon" href="{{ asset('admin/images/favicon.svg') }}" type="image/x-icon">
     
     <style>
         .category-badge {
@@ -346,9 +349,9 @@
         </div>
     </div>
     
-    <script src="admin/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="admin/js/bootstrap.bundle.min.js"></script>
-    <script src="admin/js/main.js"></script>
+        <script src=admin/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src=admin/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('admin/js/main.js') }}"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -128,9 +128,9 @@
                 @forelse($events as $event)
                 <div class="col-lg-4 col-md-6 pb-4">
                     <!-- Corrected card HTML to match theme styling -->
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="{{ route('events.detail', $event->id) }}">
+                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="{{ route('event.detail', $event->id) }}">
                         <!-- The image must be wrapped in this specific div for proper alignment and sizing -->
-                        <img class="img-fluid" src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->title }}">
+                        <img class="img-fluid" src="{{ asset(path: 'storage/' . $event->image) }}" alt="{{ $event->title }}">
                         <div class="courses-text">
                             <h4 class="text-center text-white px-3">{{ $event->title }}</h4>
                             <div class="border-top w-100 mt-3">

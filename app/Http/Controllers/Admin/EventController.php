@@ -8,21 +8,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\BookingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Booking; 
+use App\Models\Booking;
 
 class EventController extends Controller
 {
     /**
-     * Display a listing of events for the admin panel.
+     * Display a listing of the events.
+     *
+     * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        $events = Event::latest()->get();
-        return view('admin.forms', compact('events'));
-    }
+
 
     /**
      * Show the form for creating a new event.
+     *
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -31,6 +31,9 @@ class EventController extends Controller
 
     /**
      * Store a newly created event in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -49,25 +52,27 @@ class EventController extends Controller
             'registration_required' => 'boolean'
         ]);
 
-        // Handle image upload and save the path to the 'image' field for consistency
         if ($request->hasFile('event_image')) {
             $imagePath = $request->file('event_image')->store('events', 'public');
             $validated['image'] = $imagePath;
         }
 
-        // Convert tags array to string if needed
         if (isset($validated['tags']) && is_array($validated['tags'])) {
             $validated['tags'] = implode(',', $validated['tags']);
         }
 
         Event::create($validated);
 
-        return redirect()->route('admin.form')
-                        ->with('success', 'Event created successfully.');
+        // Redirect to the events index page after creation.
+        return redirect()->route('admin.events.index')
+                         ->with('success', 'Event created successfully.');
     }
 
     /**
      * Display the specified event.
+     *
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\View\View
      */
     public function show(Event $event)
     {
@@ -76,6 +81,9 @@ class EventController extends Controller
 
     /**
      * Show the form for editing the specified event.
+     *
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\View\View
      */
     public function edit(Event $event)
     {
@@ -84,6 +92,10 @@ class EventController extends Controller
 
     /**
      * Update the specified event in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Event $event)
     {
@@ -102,7 +114,6 @@ class EventController extends Controller
             'registration_required' => 'boolean'
         ]);
 
-        // Handle new image upload and delete old image if it exists
         if ($request->hasFile('event_image')) {
             if ($event->image) {
                 Storage::disk('public')->delete($event->image);
@@ -117,12 +128,16 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return redirect()->route('admin.form')
-                        ->with('success', 'Event updated successfully.');
+        // Redirect to the events index page after update.
+        return redirect()->route('admin.events.index')
+                         ->with('success', 'Event updated successfully.');
     }
 
     /**
      * Remove the specified event from storage.
+     *
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Event $event)
     {
@@ -130,70 +145,111 @@ class EventController extends Controller
         if ($event->image) {
             Storage::disk('public')->delete($event->image);
         }
-        
+
         $event->delete();
-        
-        return redirect()->route('admin.form')
-                        ->with('success', 'Event deleted successfully.');
+
+    
+        return redirect()->route('admin.events.index')
+                         ->with('success', 'Event deleted successfully.');
     }
 
     /**
-     * Display featured events on the homepage.
+     * Show featured events on the homepage.
+     *
+     * @return \Illuminate\View\View
      */
     public function showHomepageEvents()
     {
+        
         $featuredEvents = Event::where('featured', 1)->latest()->take(5)->get();
-        // The view expects a variable named 'featuredEvents'
-        return view('user.index', compact('featuredEvents'));
+
+        
+        $events = Event::all();
+
+        // Pass both variables to the view.
+        return view('user.index', compact('featuredEvents', 'events'));
     }
 
     /**
-     * Display all events on the public events page.
+     * Show a list of all public events.
+     *
+     * @return \Illuminate\View\View
      */
     public function showPublicEvents()
     {
         $events = Event::latest()->get();
-        // The events page view expects a variable named 'events'
+        
         return view('user.event', compact('events'));
     }
-    
+
     /**
-     * Handle event booking.
+     * Handle the event booking process.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-        /**
-     * Handle event booking with email confirmation.
-     */
-    public function bookEvent($id)
+    public function bookEvent(Request $request, $id)
     {
         $event = Event::findOrFail($id);
 
-        if ($event->booked_seats < $event->total_seats) {
-            $event->booked_seats += 1;
-            $event->save();
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'seat_count' => 'required|integer|min:1|max:' . ($event->total_seats - $event->booked_seats),
+        ]);
 
-            // Optional: create a Booking record linked to user & event
-            $booking = Booking::create([
-                'user_id' => auth()->id(),
-                'event_id' => $event->id,
-                'seat_number' => $event->booked_seats,
-            ]);
+       
+        $userId = auth()->check() ? auth()->id() : null;
 
-            // Send confirmation email to user
-            Mail::to(auth()->user()->email)->send(new BookingConfirmationMail($booking));
+        
+        $booking = new Booking();
+        $booking->user_id = $userId;
+        $booking->event_id = $event->id;
+        $booking->name = $request->name;
+        $booking->email = $request->email;
+        $booking->seat_count = $request->seat_count;
+        $booking->ticket_number = 'EVT-' . now()->timestamp . rand(100, 999);
+        $booking->seat_number = null;
 
-            return redirect()->back()->with('success', 'Seat booked! A confirmation email with your ticket has been sent.');
-        } else {
-            return redirect()->back()->with('error', 'No seats available.');
-        }
+        $booking->save();
+
+       
+        $event->booked_seats += $request->seat_count;
+        $event->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking successful!',
+            'ticketNumber' => $booking->ticket_number,
+            'bookingDate' => $booking->created_at->format('Y-m-d'),
+            'name' => $booking->name,
+            'email' => $booking->email,
+            'seatCount' => $booking->seat_count,
+            'seatsLeft' => $event->total_seats - $event->booked_seats,
+        ]);
     }
 
-
     /**
-     * Display a single event's details.
+     * Show event details for a public view.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
      */
     public function showEventDetail($id)
     {
         $event = Event::findOrFail($id);
         return view('user.event_detail', compact('event'));
     }
+
+    public function index()
+{
+   
+    $events = \App\Models\Event::orderBy('created_at', 'desc')->paginate(10);
+
+    
+    return view('admin.events.index', compact('events'));
+}
+ 
 }

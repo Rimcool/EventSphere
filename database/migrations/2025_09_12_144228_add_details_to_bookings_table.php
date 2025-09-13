@@ -6,17 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->string('ticket_image')->nullable()->after('seat_number');
+            $table->string('name')->after('event_id');
+            $table->string('email')->after('name');
+            $table->integer('seat_count')->after('email');
+            $table->string('ticket_number')->nullable()->after('seat_count');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->dropColumn('ticket_image');
+            $table->dropColumn(['name', 'email', 'seat_count', 'ticket_number']);
         });
     }
 };

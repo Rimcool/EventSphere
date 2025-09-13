@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\EventController;
-use App\Http\Controllers\ContactController; // <-- Use only this
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\FeedbackController;
 
-// --- Public User-Facing Routes ---
-// These routes do not require any authentication or admin privileges.
+
 Route::get('/', [EventController::class, 'showHomepageEvents'])->name('home');
 
 Route::get('/about', function () {
@@ -27,45 +29,45 @@ Route::get('/testimonial', function () {
     return view('user/testimonial');
 })->name('testimonial');
 
-// Event-specific routes
-// This route will now pull all events from the database via the controller.
+Route::get('/feedback', [FeedbackController::class, 'create'])->name('feedback.create');
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+
 Route::get('/events', [EventController::class, 'showPublicEvents'])->name('events');
 Route::get('/event/{id}', [EventController::class, 'showEventDetail'])->name('event.detail');
 Route::post('/event/{id}/book', [EventController::class, 'bookEvent'])->name('event.book');
 
 
-// --- Admin Routes ---
-// This group uses the 'admin' prefix for all URLs.
-Route::prefix('admin')->group(function () {
 
-    // Main admin dashboard route
-    Route::get('/', function () {
+Route::middleware(['auth', 'is_admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+    
+    Route::get('/panel', function () {
         return view('admin.index');
-    })->name('admin.index');
+    })->name('index');
 
-    // Use a resource controller for all CRUD operations on events.
-    // The `names` method will now correctly create `admin.events.destroy` and other routes.
-    Route::resource('events', EventController::class)->except(['index'])->names('admin.events');
+    
+    Route::resource('galleries', GalleryController::class);
 
-    // The 'admin/form' route seems to be for creating a new event.
-    // The Route::resource('events', ...) already handles this via events/create,
-    // so you can use that instead if you want to follow Laravel conventions.
-    Route::get('/form', [EventController::class, 'index'])->name('admin.form');
+    
+    Route::resource('events', EventController::class)->except(['index']);
 
-    // Use only ContactController for admin contacts
-    Route::resource('contacts', ContactController::class)->names([
-        'index' => 'admin.contacts.index',
-        'create' => 'admin.contacts.create',
-        'store' => 'admin.contacts.store',
-        'show' => 'admin.contacts.show',
-        'edit' => 'admin.contacts.edit',
-        'update' => 'admin.contacts.update',
-        'destroy' => 'admin.contacts.destroy',
-    ]);
+    
+    Route::get('/form', [EventController::class, 'create'])->name('form');
+
+
+    
+    Route::resource('contacts', ContactController::class);
+
+    
+    Route::resource('feedback', FeedbackController::class)->only(['index']);
+    Route::get('/feedback/export', [FeedbackController::class, 'exportPDF'])->name('feedback.export');
+
+    Route::get('/admin/users', [UsersController::class, 'showUsers'])->name('admin.users');
 });
 
-// --- Jetstream-Authenticated Routes ---
-// These routes are only accessible to logged-in and verified users.
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
